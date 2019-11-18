@@ -1,5 +1,15 @@
 S2VFLM
 
+## environments
+
+python 3.7
+
+pytorch-gpu 1.0.1+cuda101
+
+tensorflow-gpu 1.13.1
+
+## Data
+
 Data: You can download the dataset CUBird and NABird from following link：
 
 https://drive.google.com/open?id=1NJDqvTrO3bDEWpNCyIE8NC_wdvAofIqE
