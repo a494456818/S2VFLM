@@ -1,6 +1,6 @@
 S2VFLM
 
-## environments
+## Environments
 
 python 3.7
 
