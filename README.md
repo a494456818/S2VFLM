@@ -6,13 +6,11 @@ https://drive.google.com/open?id=1NJDqvTrO3bDEWpNCyIE8NC_wdvAofIqE
 
 Put the uncompressed data to the folder "data", like this:
 
-- S2VFLM
+S2VFLM
 
-​	- data
-
-​		- CUB2011
-
-​		- NABidr
+- data
+  - CUB2011
+  - NABidr
 
 ## Reproduce results
 
