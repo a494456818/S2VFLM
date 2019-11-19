@@ -417,7 +417,7 @@ def eval_fakefeat_test(it, netG, dataset, param, result):
         result.save_model = True
     print("{}nn Classifier: ".format(opt.Knn))
     print("Accuracy is {:.4}%".format(acc))
-
+    print("Best Acc is {:.4}%".format(result.best_acc))
 
 """ Generalized ZSL"""
 def eval_fakefeat_GZSL(it, netG, dataset, param, result):

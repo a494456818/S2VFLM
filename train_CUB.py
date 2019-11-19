@@ -28,7 +28,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', default='0', type=str, help='index of GPU to use')
 parser.add_argument('--splitmode', default='easy', type=str, help='the way to split train/test data: easy/hard')
 parser.add_argument('--manualSeed', type=int, help='manual seed')
-parser.add_argument('--resume',  type=str, help='the model to resume', default="")
+parser.add_argument('--resume',  type=str, help='the model to resume', default=None)
 parser.add_argument('--disp_interval', type=int, default=20)
 parser.add_argument('--save_interval', type=int, default=200)
 parser.add_argument('--evl_interval',  type=int, default=40)
@@ -79,12 +79,10 @@ def cal_triplets_loss(anchor, train_dic, margin):
         other_cls = list(set(train_dic.keys()) - set([i]))
         for j in other_cls:
             negative = Variable(torch.from_numpy(random.sample(train_dic[j], 1)[0])).cuda()
-            neg_dist = torch.mean(torch.sqrt(torch.sum(torch.pow(negative.sub_(anchor[i]), 2), 1)))
+            neg_dist = torch.sqrt(torch.sum(torch.pow(negative.sub_(anchor[i]), 2)))
             negative_loss = torch.add(negative_loss, neg_dist)
-
         negative_loss = torch.div(negative_loss, Variable(torch.Tensor([len(other_cls)])).cuda())
     pos_loss = torch.div(pos_loss, Variable(torch.Tensor([_len])).cuda())
-
     basic_loss = torch.add(torch.sub(pos_loss, negative_loss), margin)
     if basic_loss < 0:
         basic_loss = Variable(torch.Tensor([0.0])).cuda()
@@ -426,6 +424,7 @@ def eval_fakefeat_test(it, netG, dataset, param, result):
         result.save_model = True
     print("{}nn Classifier: ".format(opt.Knn))
     print("Accuracy is {:.4}%".format(acc))
+    print("Best Acc is {:.4}%".format(result.best_acc))
 
 """ Generalized ZSL"""
 def eval_fakefeat_GZSL(it, netG, dataset, param, result):
