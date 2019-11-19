@@ -78,7 +78,7 @@ def cal_triplets_loss(anchor, train_dic, margin):
         # negative
         other_cls = list(set(train_dic.keys()) - set([i]))
         for j in other_cls:
-            negative = random.sample(train_dic[j],1)[0]
+            negative = Variable(torch.from_numpy(random.sample(train_dic[j], 1)[0])).cuda()
             neg_dist = torch.mean(torch.sqrt(torch.sum(torch.pow(negative.sub_(anchor[i]), 2), 1)))
             negative_loss = torch.add(negative_loss, neg_dist)
 
