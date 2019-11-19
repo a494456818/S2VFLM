@@ -152,7 +152,9 @@ def train():
     unsupervisedData = UnsupervisedData(dataset.test_text_feature, dataset.labels_test,
                                         dataset.pfc_feat_data_test, dataset.train_cls_num)
 
-    first = True
+    first = True if opt.resume != None else False
+    class_increment = False
+
     while True:
         if not first:
             start_step = 0
