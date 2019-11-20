@@ -423,8 +423,8 @@ def eval_fakefeat_test(it, netG, dataset, param, result):
         result.best_iter = it
         result.save_model = True
     print("{}nn Classifier: ".format(opt.Knn))
-    print("Accuracy is {:.4}%".format(acc))
-    print("Best Acc is {:.4}%".format(result.best_acc))
+    print("Test Accuracy is {:.4}%".format(acc))
+    print("Best Test Acc is {:.4}%".format(result.best_acc))
 
 """ Generalized ZSL"""
 def eval_fakefeat_GZSL(it, netG, dataset, param, result):
@@ -480,7 +480,7 @@ def eval_fakefeat_GZSL(it, netG, dataset, param, result):
         result.save_model = True
         pass
     print("AUC Score is {:.4}".format(auc_score))
-    print("train accuracy is {:.04}".format(np.mean(acc_S_T_list)))
+    print("Train accuracy is {:.04}".format(np.mean(acc_S_T_list)))
     
 class Result(object):
     def __init__(self):
