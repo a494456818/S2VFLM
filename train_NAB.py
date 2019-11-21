@@ -255,8 +255,10 @@ def train():
                         Wz = netG.rdc_text.weight
                         reg_Wz_loss = Wz.pow(2).sum(dim=0).sqrt().sum().mul(opt.REG_Wz_LAMBDA)
 
-                    anchor = netG(anchor_z, anchor_text_feat)
-                    triplet_loss = cal_triplets_loss(anchor, train_dic, opt.margin)
+                    triplet_loss = Variable(torch.Tensor([0.0])).cuda()
+                    if it % 10 == 0:
+                        anchor = netG(anchor_z, anchor_text_feat)
+                        triplet_loss = cal_triplets_loss(anchor, train_dic, opt.margin)
 
                     all_loss = GC_loss + Euclidean_loss + reg_loss + reg_Wz_loss + triplet_loss
                     all_loss.backward()
