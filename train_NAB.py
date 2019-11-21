@@ -31,8 +31,8 @@ parser.add_argument('--disp_interval', type=int, default=20)
 parser.add_argument('--save_interval', type=int, default=200)
 parser.add_argument('--evl_interval',  type=int, default=40)
 parser.add_argument('--txt_feat_path',  type=str, default="")
-parser.add_argument('--margin',  type=str, default="")
-parser.add_argument('--confidence',  type=str, default="")
+parser.add_argument('--margin',  type=float, default="")
+parser.add_argument('--confidence',  type=float, default="")
 
 opt = parser.parse_args()
 print('Running parameters:')
@@ -95,7 +95,7 @@ def cal_triplets_loss(anchor, train_dic, margin):
     basic_loss = torch.add(torch.sub(pos_loss, neg_loss), margin)
     if basic_loss < 0:
         basic_loss = Variable(torch.Tensor([0.0])).cuda()
-    loss = 1 / 2 * basic_loss * opt.TRIPLET_LOSS_LAMBDA
+    loss = 1 / 2 * basic_loss
     return loss
 
 
@@ -255,10 +255,8 @@ def train():
                         Wz = netG.rdc_text.weight
                         reg_Wz_loss = Wz.pow(2).sum(dim=0).sqrt().sum().mul(opt.REG_Wz_LAMBDA)
 
-                    triplet_loss = Variable(torch.Tensor([0.0])).cuda()
-                    if opt.TRIPLET_LOSS_LAMBDA != 0 and it % opt.TRIPLTE_LOSS_STEP == 0:
-                        anchor = netG(anchor_z, anchor_text_feat)
-                        triplet_loss = cal_triplets_loss(anchor, train_dic, opt.margin)
+                    anchor = netG(anchor_z, anchor_text_feat)
+                    triplet_loss = cal_triplets_loss(anchor, train_dic, opt.margin)
 
                     all_loss = GC_loss + Euclidean_loss + reg_loss + reg_Wz_loss + triplet_loss
                     all_loss.backward()
@@ -419,6 +417,7 @@ def eval_fakefeat_test(it, netG, dataset, param, result):
     print("Test Accuracy is {:.4}%".format(acc))
     print("Best Acc is {:.4}%".format(result.best_acc))
 
+
 """ Generalized ZSL"""
 def eval_fakefeat_GZSL(it, netG, dataset, param, result):
     gen_feat = np.zeros([0, param.X_dim])
@@ -442,8 +441,6 @@ def eval_fakefeat_GZSL(it, netG, dataset, param, result):
 
     """collect points for gzsl curve"""
 
-    train_acc = None
-    train_auc = None
     acc_S_T_list, acc_U_T_list = list(), list()
     seen_sim = cosine_similarity(dataset.pfc_feat_data_train, visual_pivots)
     unseen_sim = cosine_similarity(dataset.pfc_feat_data_test, visual_pivots)
